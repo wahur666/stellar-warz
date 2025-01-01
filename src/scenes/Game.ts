@@ -6,21 +6,19 @@ export class Game extends Scene {
 
     graphics: Phaser.GameObjects.Graphics
     planets: Planet[]
+    planetNames = ["Alpha", "Beta", "Gamma", "Delta", "Epsilon", "Zeta", "Eta", "Theta", "Iota", "Kappa",
+        "Lambda", "Mu", "Nu", "Omicron", "Xi", "Omega", "Rho", "Sigma", "Tau", "Upsilon", "Phi", "Chi", "Psi",
+        "Pi", "Aether", "Erebus", "Aurora", "Thalassa", "Nyx", "Nova"];
+
 
     constructor() {
         super('Game');
-        this.createPlanets()
     }
 
     create() {
         this.graphics = this.add.graphics()
-
-        for (const planet of this.planets) {
-            planet.draw(this.graphics)
-        }
-
+        this.createPlanets()
         this.connectPlanets()
-
         this.graphics.lineBetween(900, 0, 900, 720)
         var button = new Button(this, 1000, 100, 200, 50);
         button.onPointerUp(() => {
@@ -47,40 +45,40 @@ export class Game extends Scene {
 
     createPlanets() {
         this.planets = [];
-        this.createPlanet(100, 85); // 0
-        this.createPlanet(280, 75); // 1
-        this.createPlanet(430, 95); // 2
-        this.createPlanet(580, 65);  // 3
-        this.createPlanet(700, 105); // 4
-        this.createPlanet(830, 135); // 5
-        this.createPlanet( 90, 215);  // 6
-        this.createPlanet( 80, 345);  // 7
-        this.createPlanet(100, 475); // 8
-        this.createPlanet(150, 625); // 9
-        this.createPlanet(220, 245); // 10
-        this.createPlanet(340, 185); // 11
-        this.createPlanet(580, 205); // 12
-        this.createPlanet(700, 255); // 13
-        this.createPlanet(830, 315); // 14
-        this.createPlanet(450, 275); // 15
-        this.createPlanet(330, 365); // 16
-        this.createPlanet(200, 395); // 17
-        this.createPlanet(240, 515); // 18
-        this.createPlanet(570, 345); // 19
-        this.createPlanet(360, 485); // 20
-        this.createPlanet(550, 475); // 21
-        this.createPlanet(730, 435); // 22
-        this.createPlanet(840, 475); // 23
-        this.createPlanet(450, 555); // 24
-        this.createPlanet(660, 535); // 25
-        this.createPlanet(330, 635); // 26
-        this.createPlanet(560, 615); // 27
-        this.createPlanet(720, 635); // 28
-        this.createPlanet(840, 645); // 29
+        this.createPlanet(100, 85, 30, 70); // 0
+        this.createPlanet(280, 75, 30, 70); // 1
+        this.createPlanet(430, 95, 30, 70); // 2
+        this.createPlanet(580, 65, 30, 70);  // 3
+        this.createPlanet(700, 105, 60, 70); // 4
+        this.createPlanet(830, 135, 90, 65); // 5
+        this.createPlanet(90, 215, 60, 65);  // 6
+        this.createPlanet(80, 345, 60, 70);  // 7
+        this.createPlanet(100, 475, 60, 70); // 8
+        this.createPlanet(150, 625, 20, 75); // 9
+        this.createPlanet(220, 245, 60, 70); // 10
+        this.createPlanet(340, 185, 80, 65); // 11
+        this.createPlanet(580, 205, 55, 70); // 12
+        this.createPlanet(700, 255, 50, 70); // 13
+        this.createPlanet(830, 315, 60, 70); // 14
+        this.createPlanet(450, 275, 60, 70); // 15
+        this.createPlanet(330, 365, 60, 70); // 16
+        this.createPlanet(200, 395, 50, 65); // 17
+        this.createPlanet(240, 515, 60, 65); // 18
+        this.createPlanet(570, 345, 90, 65); // 19
+        this.createPlanet(360, 485, 60, 65); // 20
+        this.createPlanet(550, 475, 60, 70); // 21
+        this.createPlanet(730, 435, 60, 70); // 22
+        this.createPlanet(840, 475, 60, 70); // 23
+        this.createPlanet(450, 555, 90, 70); // 24
+        this.createPlanet(660, 535, 95, 60); // 25
+        this.createPlanet(330, 635, 85, 70); // 26
+        this.createPlanet(560, 615, 90, 70); // 27
+        this.createPlanet(720, 635, 90, 65); // 28
+        this.createPlanet(840, 645, 60, 65); // 29
     }
 
-    createPlanet(x: number, y: number) {
-        this.planets.push(new Planet(this, x, y, this.planets.length))
+    createPlanet(x: number, y: number, textDeltaAngle: number, textDistance: number) {
+        this.planets.push(new Planet(this, x, y, this.planets.length, this.planetNames[this.planets.length], -textDeltaAngle, textDistance));
     }
 
     connectPlanets() {

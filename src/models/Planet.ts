@@ -7,18 +7,49 @@ export class Planet {
     y: number;
     readonly radius: number = 40
     index: number;
+    name: string;
+    circle: Phaser.GameObjects.Arc;
+    graphics: Phaser.GameObjects.Graphics;
+    text: Phaser.GameObjects.Text;
 
-    constructor(scene: Scene, x: number, y: number, index: number) {
+    constructor(scene: Scene, x: number, y: number, index: number, name: string, textDeltaAngle: number, textDistance: number) {
         this.scene = scene;
         this.x = x;
         this.y = y;
         this.index = index;
+        this.name = name;
+        this.circle = this.scene.add.circle(this.x, this.y, this.radius, 0, 0);
+        this.circle.setInteractive()
+        this.graphics = this.scene.add.graphics()
+        this.scene.add.text(this.x, this.y, `${index}`).setOrigin(0.5)
+
+        const offset = this.calculateOffset(textDeltaAngle, textDistance)
+
+        this.text = this.scene.add.text(offset.x, offset.y, this.name).setOrigin(0.5)
+        this.circle.addListener("pointerover", () => {
+            this.draw(0xff0000)
+        })
+        this.circle.addListener("pointerout", () => {
+            this.draw(0xffffff)
+        })
+        this.draw(0xffffff)
+
+
     }
 
-    draw(graphic: Phaser.GameObjects.Graphics) {
-        graphic.lineStyle(5, 0xffffff, 1)
-        graphic.strokeCircle(this.x, this.y, this.radius)
-        this.scene.add.text(this.x, this.y, this.index + "").setOrigin(0.5)
+    calculateOffset(deltaAngle: number, distance: number) {
+        const radians = (Math.PI / 180) * deltaAngle;
+        return {
+            x: this.x + distance * Math.cos(radians),
+            y: this.y + distance * Math.sin(radians)
+        };
+    }
+
+    draw(color: number) {
+        this.graphics.clear()
+        this.graphics.lineStyle(5, color, 1)
+        this.graphics.strokeCircle(this.x, this.y, this.radius)
+        this.text.setTint(color);
     }
 
 }
