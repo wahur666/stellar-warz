@@ -1,5 +1,6 @@
 import {Scene} from 'phaser';
-import {Planet} from "./Planet.ts";
+import {Planet} from "../models/Planet.ts";
+import {Button} from "../models/Button.ts";
 
 export class Game extends Scene {
 
@@ -21,7 +22,13 @@ export class Game extends Scene {
         this.connectPlanets()
 
         this.graphics.lineBetween(900, 0, 900, 720)
-
+        var button = new Button(this, 1000, 100, 200, 50);
+        button.onPointerUp(() => {
+            console.log("pointer up")
+        })
+        button.onPointerDown(() => {
+            console.log("pointer down")
+        })
     }
 
     connect(planet1: Planet, planet2: Planet) {
