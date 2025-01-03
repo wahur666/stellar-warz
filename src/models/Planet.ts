@@ -11,6 +11,7 @@ export class Planet {
     circle: Phaser.GameObjects.Arc;
     graphics: Phaser.GameObjects.Graphics;
     text: Phaser.GameObjects.Text;
+    active: boolean = false
 
     constructor(scene: Scene, x: number, y: number, index: number, name: string, textDeltaAngle: number, textDistance: number) {
         this.scene = scene;
@@ -26,11 +27,15 @@ export class Planet {
         const offset = this.calculateOffset(textDeltaAngle, textDistance)
 
         this.text = this.scene.add.text(offset.x, offset.y, this.name).setOrigin(0.5)
-        this.circle.addListener("pointerover", () => {
-            this.draw(0xff0000)
-        })
-        this.circle.addListener("pointerout", () => {
-            this.draw(0xffffff)
+        // this.circle.addListener("pointerover", () => {
+        //     this.draw(0xff0000)
+        // })
+        // this.circle.addListener("pointerout", () => {
+        //     this.draw(0xffffff)
+        // })
+        this.circle.addListener("pointerup", () => {
+            this.active = !this.active
+            this.draw(this.active ? 0xff0000 : 0xffffff)
         })
         this.draw(0xffffff)
 

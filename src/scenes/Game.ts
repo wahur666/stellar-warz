@@ -1,6 +1,7 @@
 import {Scene} from 'phaser';
 import {Planet} from "../models/Planet.ts";
 import {Button} from "../models/Button.ts";
+import AssetRegistry from "./AssetRegistry.ts";
 
 export class Game extends Scene {
 
@@ -9,7 +10,9 @@ export class Game extends Scene {
     planetNames = ["Alpha", "Beta", "Gamma", "Delta", "Epsilon", "Zeta", "Eta", "Theta", "Iota", "Kappa",
         "Lambda", "Mu", "Nu", "Omicron", "Xi", "Omega", "Rho", "Sigma", "Tau", "Upsilon", "Phi", "Chi", "Psi",
         "Pi", "Aether", "Erebus", "Aurora", "Thalassa", "Nyx", "Nova"];
-
+    // private sprite: Phaser.GameObjects.Sprite;
+    private speed: number = 100;
+    private renderTexture: Phaser.GameObjects.RenderTexture;
 
     constructor() {
         super('Game');
@@ -19,14 +22,34 @@ export class Game extends Scene {
         this.graphics = this.add.graphics()
         this.createPlanets()
         this.connectPlanets()
+        this.graphics.lineStyle(5, 0xffffff, 1)
         this.graphics.lineBetween(900, 0, 900, 720)
         var button = new Button(this, 1000, 100, 200, 50);
-        button.onPointerUp(() => {
-            console.log("pointer up")
-        })
-        button.onPointerDown(() => {
-            console.log("pointer down")
-        })
+
+
+        this.renderTexture = this.add.renderTexture(100, 100, 16, 16).setScale(4)
+        this.renderTexture.drawFrame(AssetRegistry.SpaceShooterAssetPack_Ships, 67, 0, 0)
+        this.renderTexture.drawFrame(AssetRegistry.SpaceShooterAssetPack_Ships, 66, 8, 0)
+        this.renderTexture.drawFrame(AssetRegistry.SpaceShooterAssetPack_Ships, 76, 0, 8)
+        this.renderTexture.drawFrame(AssetRegistry.SpaceShooterAssetPack_Ships, 77, 8, 8)
+    }
+
+    update(_time: number, delta: number) {
+        const pointer = this.input.activePointer;
+        const angle = Phaser.Math.Angle.Between(this.renderTexture.x, this.renderTexture.y, pointer.x, pointer.y) ;
+        this.renderTexture.rotation = angle - Math.PI / 2;
+
+        const distance = Phaser.Math.Distance.Between(this.renderTexture.x, this.renderTexture.y, pointer.x, pointer.y);
+
+        if (distance > 5) { // Small threshold to avoid jitter
+            // Normalize the direction vector and scale by speed
+            const dx = Math.cos(angle) * this.speed * (delta / 1000); // Delta time in seconds
+            const dy = Math.sin(angle) * this.speed * (delta / 1000);
+
+            // Update the sprite's position
+            this.renderTexture.x += dx;
+            this.renderTexture.y += dy;
+        }
     }
 
     connect(planet1: Planet, planet2: Planet) {
@@ -140,4 +163,14 @@ export class Game extends Scene {
         this.connect(this.planets[28], this.planets[29])
         this.connect(this.planets[23], this.planets[29])
     }
+
+    // loadTileMap() {
+        // const map = this.make.tilemap({
+        //     key: AssetRegistry.TileMap,
+        //     tileWidth: 16,
+        //     tileHeight: 16
+        // });
+        // const tileset = map.addTilesetImage(AssetRegistry.ColoredPacked + 2, AssetRegistry.ColoredPacked)
+        // map.createLayer("Tile Layer 1", tileset!)
+    // }
 }
