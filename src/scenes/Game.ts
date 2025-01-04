@@ -1,7 +1,9 @@
 import {Scene} from 'phaser';
 import {Planet} from "../models/Planet.ts";
-import {Button} from "../models/Button.ts";
-import AssetRegistry from "./AssetRegistry.ts";
+// import AssetRegistry from "./AssetRegistry.ts";
+import Player from "./Player.ts";
+import {Nav} from "../models/Nav.ts";
+import Ui from "./Ui.ts";
 
 export class Game extends Scene {
 
@@ -11,11 +13,15 @@ export class Game extends Scene {
         "Lambda", "Mu", "Nu", "Omicron", "Xi", "Omega", "Rho", "Sigma", "Tau", "Upsilon", "Phi", "Chi", "Psi",
         "Pi", "Aether", "Erebus", "Aurora", "Thalassa", "Nyx", "Nova"];
     // private sprite: Phaser.GameObjects.Sprite;
-    private speed: number = 100;
-    private renderTexture: Phaser.GameObjects.RenderTexture;
+    // private renderTexture: Phaser.GameObjects.RenderTexture;
+    private ui: Ui;
+    private player: Player;
+    selectedPlanet: Planet | null = null;
+    nav: Nav;
 
     constructor() {
         super('Game');
+        this.nav = new Nav();
     }
 
     create() {
@@ -24,35 +30,40 @@ export class Game extends Scene {
         this.connectPlanets()
         this.graphics.lineStyle(5, 0xffffff, 1)
         this.graphics.lineBetween(900, 0, 900, 720)
-        var button = new Button(this, 1000, 100, 200, 50);
+        this.player = new Player(this, this.planets[0]);
+        this.ui = new Ui(this, 900, 0)
+        //
+        //
+        // this.renderTexture = this.add.renderTexture(100, 100, 16, 16).setScale(4)
+        // this.renderTexture.drawFrame(AssetRegistry.SpaceShooterAssetPack_Ships, 67, 0, 0)
+        // this.renderTexture.drawFrame(AssetRegistry.SpaceShooterAssetPack_Ships, 66, 8, 0)
+        // this.renderTexture.drawFrame(AssetRegistry.SpaceShooterAssetPack_Ships, 76, 0, 8)
+        // this.renderTexture.drawFrame(AssetRegistry.SpaceShooterAssetPack_Ships, 77, 8, 8)
 
 
-        this.renderTexture = this.add.renderTexture(100, 100, 16, 16).setScale(4)
-        this.renderTexture.drawFrame(AssetRegistry.SpaceShooterAssetPack_Ships, 67, 0, 0)
-        this.renderTexture.drawFrame(AssetRegistry.SpaceShooterAssetPack_Ships, 66, 8, 0)
-        this.renderTexture.drawFrame(AssetRegistry.SpaceShooterAssetPack_Ships, 76, 0, 8)
-        this.renderTexture.drawFrame(AssetRegistry.SpaceShooterAssetPack_Ships, 77, 8, 8)
+
     }
 
-    update(_time: number, delta: number) {
-        const pointer = this.input.activePointer;
-        const angle = Phaser.Math.Angle.Between(this.renderTexture.x, this.renderTexture.y, pointer.x, pointer.y) ;
-        this.renderTexture.rotation = angle - Math.PI / 2;
-
-        const distance = Phaser.Math.Distance.Between(this.renderTexture.x, this.renderTexture.y, pointer.x, pointer.y);
-
-        if (distance > 5) { // Small threshold to avoid jitter
-            // Normalize the direction vector and scale by speed
-            const dx = Math.cos(angle) * this.speed * (delta / 1000); // Delta time in seconds
-            const dy = Math.sin(angle) * this.speed * (delta / 1000);
-
-            // Update the sprite's position
-            this.renderTexture.x += dx;
-            this.renderTexture.y += dy;
-        }
+    update(_time: number, _delta: number) {
+        // const pointer = this.input.activePointer;
+        // const angle = Phaser.Math.Angle.Between(this.renderTexture.x, this.renderTexture.y, pointer.x, pointer.y) ;
+        // this.renderTexture.rotation = angle - Math.PI / 2;
+        //
+        // const distance = Phaser.Math.Distance.Between(this.renderTexture.x, this.renderTexture.y, pointer.x, pointer.y);
+        //
+        // if (distance > 5) { // Small threshold to avoid jitter
+        //     // Normalize the direction vector and scale by speed
+        //     const dx = Math.cos(angle) * this.speed * (delta / 1000); // Delta time in seconds
+        //     const dy = Math.sin(angle) * this.speed * (delta / 1000);
+        //
+        //     // Update the sprite's position
+        //     this.renderTexture.x += dx;
+        //     this.renderTexture.y += dy;
+        // }
     }
 
     connect(planet1: Planet, planet2: Planet) {
+        this.nav.addEdge(planet1.name, planet2.name);
         const newCoords = this.calculateOffset(planet1.x, planet1.y, Math.atan2(planet2.y - planet1.y, planet2.x - planet1.x), planet1.radius)
         const newCoords2 = this.calculateOffset(planet2.x, planet2.y, Math.atan2(planet1.y - planet2.y, planet1.x - planet2.x), planet2.radius)
         this.graphics.lineStyle(5, 0xffffff, 1)
@@ -173,4 +184,26 @@ export class Game extends Scene {
         // const tileset = map.addTilesetImage(AssetRegistry.ColoredPacked + 2, AssetRegistry.ColoredPacked)
         // map.createLayer("Tile Layer 1", tileset!)
     // }
+
+
+    get currentPlayer() {
+        return this.player;
+    }
+
+    selectPlanet(planet: Planet) {
+        if (this.selectedPlanet == planet) {
+            planet.setActive(false);
+            this.selectedPlanet = null;
+        } else {
+            this.selectedPlanet = planet;
+            this.planets.forEach(p => {
+                p.setActive(p.name == planet.name)
+            })
+        }
+        this.ui.updateUiWithPlanetInfo(this.selectedPlanet)
+    }
+
+    getPlanetByName(name: string): Planet | undefined {
+        return this.planets.find(p => p.name === name);
+    }
 }

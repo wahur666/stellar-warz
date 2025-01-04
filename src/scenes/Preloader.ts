@@ -17,6 +17,10 @@ export class Preloader extends Scene {
             frameWidth: 8,
         });
         this.load.tilemapTiledJSON(AssetRegistry.TileMap, dungeon);
+        this.load.spritesheet(AssetRegistry.MonochromeTransparentPacked, "assets/monochrome-transparent_packed.png", {
+            frameWidth: 16,
+            frameHeight: 16
+        })
     }
 
     create() {

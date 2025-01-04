@@ -19,9 +19,11 @@
         /* Linting */
         "strict": true,
         "strictPropertyInitialization": false,
-        "noUnusedLocals": true,
-        "noUnusedParameters": true,
-        "noFallthroughCasesInSwitch": true
+//        "noUnusedLocals": null,
+//        "noUnusedParameters": null,
+        "noFallthroughCasesInSwitch": true,
+        "strictFunctionTypes": true,
+        "verbatimModuleSyntax": true
     },
     "include": [
         "src"

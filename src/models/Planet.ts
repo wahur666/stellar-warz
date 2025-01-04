@@ -1,8 +1,9 @@
-import {Scene} from "phaser";
+import Player from "../scenes/Player.ts";
+import type {Game} from "../scenes/Game.ts";
 
 export class Planet {
 
-    scene: Scene;
+    scene: Game;
     x: number;
     y: number;
     readonly radius: number = 40
@@ -12,8 +13,9 @@ export class Planet {
     graphics: Phaser.GameObjects.Graphics;
     text: Phaser.GameObjects.Text;
     active: boolean = false
+    player: Player;
 
-    constructor(scene: Scene, x: number, y: number, index: number, name: string, textDeltaAngle: number, textDistance: number) {
+    constructor(scene: Game, x: number, y: number, index: number, name: string, textDeltaAngle: number, textDistance: number) {
         this.scene = scene;
         this.x = x;
         this.y = y;
@@ -34,8 +36,7 @@ export class Planet {
         //     this.draw(0xffffff)
         // })
         this.circle.addListener("pointerup", () => {
-            this.active = !this.active
-            this.draw(this.active ? 0xff0000 : 0xffffff)
+            this.scene.selectPlanet(this)
         })
         this.draw(0xffffff)
 
@@ -55,6 +56,11 @@ export class Planet {
         this.graphics.lineStyle(5, color, 1)
         this.graphics.strokeCircle(this.x, this.y, this.radius)
         this.text.setTint(color);
+    }
+
+    setActive(active: boolean) {
+        this.active = active;
+        this.draw(this.active ? 0xff0000 : 0xffffff)
     }
 
 }
