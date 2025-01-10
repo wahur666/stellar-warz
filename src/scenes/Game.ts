@@ -4,6 +4,8 @@ import {Planet} from "../models/Planet.ts";
 import Player from "./Player.ts";
 import {Nav} from "../models/Nav.ts";
 import Ui from "./Ui.ts";
+import Pointer = Phaser.Input.Pointer;
+import Vector2 = Phaser.Math.Vector2;
 
 export class Game extends Scene {
 
@@ -18,6 +20,7 @@ export class Game extends Scene {
     private player: Player;
     selectedPlanet: Planet | null = null;
     nav: Nav;
+    startPos: Phaser.Math.Vector2 | null = null;
 
     constructor() {
         super('Game');
@@ -40,7 +43,22 @@ export class Game extends Scene {
         // this.renderTexture.drawFrame(AssetRegistry.SpaceShooterAssetPack_Ships, 76, 0, 8)
         // this.renderTexture.drawFrame(AssetRegistry.SpaceShooterAssetPack_Ships, 77, 8, 8)
 
+        this.cameras.main.setBounds(0, 0, 1920, 1080); // Set the bounds of the camera
 
+        let dragStartX = 0;
+        let dragStartY = 0;
+
+        this.input.on('pointerdown', (pointer: Pointer) => {
+            dragStartX = pointer.x + this.cameras.main.scrollX;
+            dragStartY = pointer.y + this.cameras.main.scrollY;
+        });
+
+        this.input.on('pointermove', (pointer: Pointer) => {
+            if (pointer.isDown) {
+                this.cameras.main.scrollX = dragStartX - pointer.x;
+                this.cameras.main.scrollY = dragStartY - pointer.y;
+            }
+        });
 
     }
 

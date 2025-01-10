@@ -1,23 +1,20 @@
-import {defaultFont} from "../helper/utils.ts";
+import AssetRegistry from "../scenes/AssetRegistry.ts";
 
-export class Button {
+export class IconButton {
     width: number;
     height: number;
     element: Phaser.GameObjects.Graphics;
     rect: Phaser.GameObjects.Rectangle;
-    text: Phaser.GameObjects.Text;
+    icon: Phaser.GameObjects.Sprite;
     disabled: boolean = false;
 
-    constructor(public scene: Phaser.Scene, public x: number, public y: number, width: number, height: number, text: string) {
+    constructor(public scene: Phaser.Scene, public x: number, public y: number, width: number, height: number, iconNumber: number) {
         this.width = width;
         this.height = height;
         this.rect = this.scene.add.rectangle(this.x, this.y, width, height).setOrigin(0);
 
         this.element = this.scene.add.graphics()
-        this.text = this.scene.add.text(this.x + this.width / 2, this.y + this.height / 2, text, {
-            fontFamily: defaultFont,
-            fontSize: "18px"
-        }).setOrigin(0.5)
+        this.icon = this.scene.add.sprite(this.x + this.width / 2, this.y + this.height / 2, AssetRegistry.MonochromeTransparentPacked, iconNumber).setScale(3)
         this.draw(0xffffff)
         this.rect.setInteractive()
         this.rect.addListener("pointerover", () => {
@@ -39,7 +36,7 @@ export class Button {
     draw(color: number) {
         this.element.clear()
         this.element.lineStyle(3, color, 1)
-        this.text.setTint(color);
+        this.icon.setTint(color);
         this.element.strokeRect(this.x, this.y, this.width, this.height)
     }
 
@@ -61,7 +58,7 @@ export class Button {
         })
     }
 
-    setDisabled(disabled: boolean): Button {
+    setDisabled(disabled: boolean): IconButton {
         this.disabled = disabled;
         if (this.disabled) {
             this.draw(0x808080)

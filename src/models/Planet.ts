@@ -1,12 +1,13 @@
 import Player from "../scenes/Player.ts";
 import type {Game} from "../scenes/Game.ts";
+import {defaultFont} from "../helper/utils.ts";
 
 export class Planet {
 
     scene: Game;
     x: number;
     y: number;
-    readonly radius: number = 40
+    readonly radius: number = 50
     index: number;
     name: string;
     circle: Phaser.GameObjects.Arc;
@@ -28,7 +29,9 @@ export class Planet {
 
         const offset = this.calculateOffset(textDeltaAngle, textDistance)
 
-        this.text = this.scene.add.text(offset.x, offset.y, this.name).setOrigin(0.5)
+        this.text = this.scene.add.text(offset.x, offset.y, this.name, {
+            fontFamily: defaultFont
+        }).setOrigin(0.5)
         // this.circle.addListener("pointerover", () => {
         //     this.draw(0xff0000)
         // })

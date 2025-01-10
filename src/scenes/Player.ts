@@ -10,7 +10,10 @@ export default class Player {
 
     constructor(private scene: Game, planet: Planet) {
         this.currentPlanet = planet;
-        this.character = new Character(this.scene, this.currentPlanet.x, this.currentPlanet.y)
+        this.character = new Character(this.scene, this.currentPlanet.x - 20, this.currentPlanet.y + 20, 30)
+        var character1 = new Character(this.scene, this.currentPlanet.x - 20, this.currentPlanet.y - 20, 31)
+        var character2 = new Character(this.scene, this.currentPlanet.x - 20, this.currentPlanet.y, 32)
+        var character3 = new Character(this.scene, this.currentPlanet.x + 20, this.currentPlanet.y, 33)
         // this.scene.input.on('pointerdown', (ev: Pointer) => {
         //     if (ev.leftButtonDown()) {
         //         this.character.moveTo(ev.x, ev.y)

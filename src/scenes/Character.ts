@@ -6,9 +6,9 @@ export default class Character extends Phaser.GameObjects.Sprite {
     speed: number;
     currentTween?: Phaser.Tweens.Tween; // Track the active tween
 
-    constructor(scene: Phaser.Scene, x: number, y: number, speed: number = 100) {
-        super(scene, x, y, AssetRegistry.MonochromeTransparentPacked, 30)
-        this.scale = 2;
+    constructor(scene: Phaser.Scene, x: number, y: number, characterIconLocation: number, speed: number = 100) {
+        super(scene, x, y, AssetRegistry.MonochromeTransparentPacked, characterIconLocation)
+        this.scale = 1;
         this.speed = speed;
         this.scene.add.existing(this);
     }
